@@ -1,2 +1,2 @@
-# Word-Gues-Game
+# Word-Guess-Game
 Hangman Homework

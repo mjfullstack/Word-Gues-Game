@@ -109,7 +109,7 @@ var snowWhite = {
         };
         this.selRandDwarf();
         this.hypeDwarfs();
-        this.printSched();
+        // this.printSched();
     },
 
     // Select a random dwarf for the hanging!
@@ -144,7 +144,7 @@ var snowWhite = {
         } else {
             document.getElementById("nextTime").innerHTML = "Sorry you didn't want to continue.";
         };
-        document.getElementById("goodBye").innerHTML = "<h1>Game Over!</h1>";
+        // document.getElementById("goodBye").innerHTML = "<h1>Game Over!</h1>";
     },
 
 
@@ -189,13 +189,26 @@ var snowWhite = {
      word2guess : {          // OBJECT
         word : [],
         show : [],
+        wrongLtrs : [],
+        guessesLeft : 0,
+        wonThisGame : false
     },
 
-        // Get random dwarf from the two random numbers arrays for dwarfs and activities above
-        // word2guess.word = this.randDwarfName.split();
+    playerStats : {
+        wins : 0,
+        losses : 0
+    },
+
+    // Get random dwarf from the two random numbers arrays for dwarfs and activities above
     initHangmanOut : function () {
         this.word2guess.word = this.randDwarfName;
-        console.log(this.word2guess.word); 
+        this.word2guess.wrongLtrs = [];
+        this.word2guess.guessesLeft = this.word2guess.word.length + 5;
+        this.word2guess.wonThisGame = false;
+        console.log("word " + this.word2guess.word); 
+        console.log("wrongLtrs " + this.word2guess.wrongLtrs); 
+        console.log("guessesLeft " + this.word2guess.guessesLeft); 
+        console.log("wonThisGame " + this.word2guess.wonThisGame); 
         
         // Initialize all letters to NOT show
         for (var j=0; j<this.word2guess.word.length; j++ ) {
@@ -203,16 +216,67 @@ var snowWhite = {
         };
     },
     
+    // Print out Stats
+    printStats : function () {
+        console.log("word " + this.word2guess.word); 
+        console.log("wrongLtrs " + this.word2guess.wrongLtrs); 
+        console.log("guessesLeft " + this.word2guess.guessesLeft); 
+        console.log("wonThisGame " + this.word2guess.wonThisGame); 
+
+        // Update wrong-guesses display...
+        var wrongGuessesHtml = "";
+        for (var j=0; j<this.word2guess.wrongLtrs.length; j++) {
+            wrongGuessesHtml += this.word2guess.wrongLtrs[j] + ", ";
+        }
+        document.getElementById("wrong-guesses").innerHTML = "wrong-guesses: " + wrongGuessesHtml;
+        document.getElementById("guesses-left").innerHTML = "guesses-left: " + this.word2guess.guessesLeft;
+        document.getElementById("win-counter").innerHTML = "win-counter: " + this.playerStats.wins;
+        document.getElementById("loss-counter").innerHTML = "loss-counter: " + this.playerStats.losses;
+        if ( (this.word2guess.guessesLeft === 0 ) || this.word2guess.wonThisGame ) {
+            if ( this.word2guess.wonThisGame ) {
+                document.getElementById("goodBye").innerHTML = "<strong><strong><h1>!!!  YOU WON  !!!</h1></strong></strong>"; 
+            } else {
+                document.getElementById("goodBye").innerHTML = "<h1>Sorry, You Lost</h1>";
+            }
+            document.getElementById("goodBye").innerHTML += "<strong><h1>Game Over!</h1></strong>";
+        }
+    },
+      
+    // Check letter player pressed against each letter of word2guess...
     myCompareLetter : function (letterPressed) {
         // Main compare of word[j] and guessed letter
-        console.log("Hello from myCompareLetter... ");
+        var matchFound = false;
         for (var j=0; j < this.word2guess.word.length; j++) {
             console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
-            if (this.word2guess.word[j].toLowerCase() === letterPressed) {
+            if (this.word2guess.word[j].toLowerCase() === letterPressed) { // CORRECT Guess
                 this.word2guess.show[j] = true;
+                matchFound = true;
                 console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
                 console.log(this.word2guess.show[i] + " Show Letter");
-            } else {
+            }
+        };
+        // WRONG Guess
+        if (!matchFound) {
+            this.word2guess.wrongLtrs.push(letterPressed);
+        };
+
+        // Subtract 1 from guesses remaining
+        this.word2guess.guessesLeft--;
+
+        // Check if all letters have been guess correctly, 
+        var testForAllTrue = true ;
+        for (var j=0; j<this.word2guess.word.length; j++ ) {
+            // Any false show[j] will make testForAllTrue be false...
+            testForAllTrue &= this.word2guess.show[j];
+        };
+
+        // Set property in word2guess object
+        this.word2guess.wonThisGame = testForAllTrue;
+        if ( testForAllTrue) {
+            this.playerStats.wins++;
+        } else {
+            if ( !this.word2guess.guessesLeft) {
+                this.playerStats.losses++;
             }
         }
     },
@@ -243,7 +307,7 @@ var snowWhite = {
             };
         };
 
-        document.getElementById("hang").innerHTML =  html2show;
+        document.getElementById("word-blanks").innerHTML =  html2show;
     },
 
     // Hang Dwarf Script
@@ -271,6 +335,7 @@ var snowWhite = {
                 snowWhite.myDontLike(actionLetter);
             };
         snowWhite.dispHangmanOut();
+        snowWhite.printStats();
         };
     }, // End of hangDwarf
 

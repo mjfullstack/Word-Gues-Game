@@ -156,7 +156,7 @@ var snowWhite = {
     myDisplayLetter : function (letter) {
         var myHtmlLetter = letter;
         var myDontLike = "";
-        document.getElementById("hangLetter").innerHTML =  myHtmlLetter + "  I LIKE this Character!!!";
+        document.getElementById("hangLetter").innerHTML =  myHtmlLetter + "    <-- I LIKE this Character!!!";
         document.getElementById("hangWrong").innerHTML =  myDontLike;
     },
 
@@ -164,8 +164,9 @@ var snowWhite = {
     myDontLike : function (letter) {
         var myDontLike = letter;
         var myHtmlLetter = "";
-        document.getElementById("hangWrong").innerHTML =  myDontLike + "  I Don't Like this Character";
-        document.getElementById("hangLetter").innerHTML =  myHtmlLetter;
+        console.log("Input NOT a letter = " + myDontLike + "    <-- I Don't Like this Character");
+        // document.getElementById("hangWrong").innerHTML =  myDontLike + "    <-- I Don't Like this Character";
+        // document.getElementById("hangLetter").innerHTML =  myHtmlLetter;
     },
 
 
@@ -177,53 +178,67 @@ var snowWhite = {
         console.log ("Char = " + aChar + "; Code = " + myCharCode)
         if (((myCharCode > 64) && (myCharCode < 91)) ||
             ((myCharCode > 96) && (myCharCode < 123))) {
-            return true;
+                console.log ("TRUE Leg: Char = " + aChar + "; Code = " + myCharCode)
+                return true;
         }
-
+        console.log ("FALSE Leg: Char = " + aChar + "; Code = " + myCharCode)
         return false;
+    },
+
+    // Create object for Hangman game display output...
+     word2guess : {          // OBJECT
+        word : [],
+        show : [],
+    },
+
+        // Get random dwarf from the two random numbers arrays for dwarfs and activities above
+        // word2guess.word = this.randDwarfName.split();
+    initHangmanOut : function () {
+        this.word2guess.word = this.randDwarfName;
+        console.log(this.word2guess.word); 
+        
+        // Initialize all letters to NOT show
+        for (var j=0; j<this.word2guess.word.length; j++ ) {
+            this.word2guess.show[j] = false;
+        };
+    },
+    
+    myCompareLetter : function (letterPressed) {
+        // Main compare of word[j] and guessed letter
+        console.log("Hello from myCompareLetter... ");
+        for (var j=0; j < this.word2guess.word.length; j++) {
+            console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
+            if (this.word2guess.word[j].toLowerCase() === letterPressed) {
+                this.word2guess.show[j] = true;
+                console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
+                console.log(this.word2guess.show[i] + " Show Letter");
+            } else {
+            }
+        }
     },
 
     // Display Output of the hangman game...
     dispHangmanOut : function () {
-        var word2guess = {          // OBJECT
-            word : [],
-            show : [],
-        };
-
-        // Get random dwarf from the two random numbers arrays for dwarfs and activities above
-        word2guess.word = this.randDwarfName.split;
-        console.log(word2guess.word); 
-        
-        // Initialize all letters to NOT show
-        for (var j=0; j<word2guess.word.length; j++ ) {
-            word2guess.show[j] = false;
-        };
-
-        // console.log(word2guess.show);
-        // word2guess.show[1] = true;
-        // word2guess.show[2] = true;
-        // console.log(word2guess.show);
 
         var html2show = "<h2> ";
         var i;
 
-
-        for (i=0; i < word2guess.word.length; i++) {
-            if (word2guess.show[i]) {
-                html2show += word2guess.word[i];
-                // html2show += "Can you hear me now";
+        // Main re-display of word / guess state
+        for (i=0; i < this.word2guess.word.length; i++) {
+            if (this.word2guess.show[i]) {
+                html2show += this.word2guess.word[i];
                 console.log(html2show);
-                console.log(word2guess.show[i] + "Show Letter");
+                console.log(this.word2guess.show[i] + " Show Letter");
             } else {
                 html2show += "_";
-                // html2show += "Can you see me now";
                 console.log(html2show);
-                console.log(word2guess.word.length);
-                console.log(word2guess.show[i] + "Show Underscore");
+                console.log(this.word2guess.word.length);
+                console.log(this.word2guess.show[i] + " Show Underscore");
 
             };
+            // Add space between characters.
             html2show += " ";
-            if (i === word2guess.word.length-1) {
+            if (i === this.word2guess.word.length-1) {
                 html2show += "</h2>";
             };
         };
@@ -235,6 +250,7 @@ var snowWhite = {
     hangDwarf : function () {
 
         // Initial Dispaly to start getting input
+        this.initHangmanOut();
         this.dispHangmanOut();
 
         // Get User Input...
@@ -244,10 +260,13 @@ var snowWhite = {
             actionLetter = actionLetter.toLowerCase();
             // var validLetter = false;
             var validLetter = snowWhite.isAlpha(actionLetter);
+            console.log ("validLetter = " + validLetter + "; actionLetter = " + actionLetter)
 
 
             if (validLetter) {
-                snowWhite.myDisplayLetter(actionLetter);
+                // snowWhite.myDisplayLetter(actionLetter);
+                console.log("Hello from onkeyup, calling myCompareLetter with actionLetter = " + actionLetter + "... ")
+                snowWhite.myCompareLetter(actionLetter); // myCompareLetter
             } else {
                 snowWhite.myDontLike(actionLetter);
             };

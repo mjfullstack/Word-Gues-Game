@@ -164,8 +164,9 @@ var snowWhite = {
     myDontLike : function (letter) {
         var myDontLike = letter;
         var myHtmlLetter = "";
-        document.getElementById("hangWrong").innerHTML =  myDontLike + "    <-- I Don't Like this Character";
-        document.getElementById("hangLetter").innerHTML =  myHtmlLetter;
+        console.log("Input NOT a letter = " + myDontLike + "    <-- I Don't Like this Character");
+        // document.getElementById("hangWrong").innerHTML =  myDontLike + "    <-- I Don't Like this Character";
+        // document.getElementById("hangLetter").innerHTML =  myHtmlLetter;
     },
 
 
@@ -202,6 +203,20 @@ var snowWhite = {
         };
     },
     
+    myCompareLetter : function (letterPressed) {
+        // Main compare of word[j] and guessed letter
+        console.log("Hello from myCompareLetter... ");
+        for (var j=0; j < this.word2guess.word.length; j++) {
+            console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
+            if (this.word2guess.word[j].toLowerCase() === letterPressed) {
+                this.word2guess.show[j] = true;
+                console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
+                console.log(this.word2guess.show[i] + " Show Letter");
+            } else {
+            }
+        }
+    },
+
     // Display Output of the hangman game...
     dispHangmanOut : function () {
 
@@ -249,7 +264,9 @@ var snowWhite = {
 
 
             if (validLetter) {
-                snowWhite.myDisplayLetter(actionLetter);
+                // snowWhite.myDisplayLetter(actionLetter);
+                console.log("Hello from onkeyup, calling myCompareLetter with actionLetter = " + actionLetter + "... ")
+                snowWhite.myCompareLetter(actionLetter); // myCompareLetter
             } else {
                 snowWhite.myDontLike(actionLetter);
             };

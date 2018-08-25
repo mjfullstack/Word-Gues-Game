@@ -37,21 +37,24 @@
 
 <body>
     <strong><h1>JavaScript is Fun!</h1></strong>
-    <p>Click the button to start the game...</p>
-
-    <button onclick="snowWhite.initWords()">Play Snow White!</button>
-    <button onclick="snowWhite.myFunction()">String Output</button>
-    <button onclick="snowWhite.hangDwarf()">Hangman Display?</button>
-
-    <!-- <button onclick="snowWhite,myHangmanOut()">Hangman Display?</button> -->
+    <!-- <p>Click the button to start the game...</p> -->
    <h2>Let's see what Snow White is up to!</h2>
+
+    <!-- <button onclick="snowWhite.initWords()">Play Snow White!</button> -->
+    <!-- <button onclick="snowWhite.myFunction()">String Output</button> -->
+    <!-- <button onclick="snowWhite.hangDwarf()">Hangman Display?</button> -->
+    <!-- <button onclick="snowWhite,myHangmanOut()">Hangman Display?</button> -->
+    
+    <!-- Check for exit case - BiG TBD -->
+    <!-- <button onclick="snowWhite.playerClickedExit()">Click to Exit</button> -->
+
+    
     <br>
     <p id="number"></p>
     <br>
     <div id="table"></div>
     
     <!-- <p>Click the button to start the game...</p>
-        
         <button onclick="snowWhite()">Play</button>
         <button onclick="myFunction()">String Output</button>
         <button onclick="myHangmanOut()">Hangman Display?</button>
@@ -77,7 +80,7 @@
 
 
 
-
+<button id="play-again" onclick="playAgain()">Click to Play Again</button>
 
     <footer> 
       <!-- (C) 2018 All Rights Reserved, FullStackJack Solutions -->
@@ -85,5 +88,32 @@
 
 
     <script src="assets/javascript/game.js"></script>
+    <script>
+        document.getElementById("goodBye").innerHTML = "<strong><strong><h1> &nbsp </h1></strong></strong>" + "<strong><h1> &nbsp </h1></strong>";
+
+        // for (var k=0; k<5; k++) {
+        var k = 0;
+        // function playSnowWhite() {
+            console.log("k before initWords = " + k);
+            snowWhite.initWords();
+            console.log("k between initWords and hangDwarf = " + k);
+            snowWhite.hangDwarf();
+            console.log("k after hangDwarf = " + k);
+            k++;
+        // };
+        function playAgain() {
+            document.getElementById("goodBye").innerHTML = "<strong><strong><h1> &nbsp </h1></strong></strong>" + "<strong><h1> &nbsp </h1></strong>";
+            console.log("k before initWords = " + k);
+            snowWhite.initWords();
+            console.log("k between initWords and hangDwarf = " + k);
+            snowWhite.hangDwarf();
+            console.log("k after hangDwarf = " + k);
+            k++;
+        };
+
+    </script>
+    <!-- Check for exit case - BiG TBD -->
+    <!-- <h1 id="player-leaves"></h1> -->
+
 </body>
 </html>

@@ -2,19 +2,19 @@
     // FUNCTIONS
     // =====================================
     // Debugging Code
-    debugPrint = function(ii) {
-        console.log ("i = " + i + ", ii = " + ii + ", dwarfNum[ii] = ", dwarfNum[ii]);
-        console.log ("randNum = ", randNum);
-        console.log ("dwarfName[dwarfNum[ii]] = ", dwarfName[dwarfNum[ii]]);
-        console.log ("dwarfNum.length = ", dwarfNum.length);
-        console.log ("dwarfsFound = ", dwarfsFound);
-        console.log ("found = ", found);
-        console.log ("Array dwarfName = " + dwarfName);
-        console.log ("Array dwarfNum = " + dwarfNum);
-        console.log ("Array activity = " + activity);
-        console.log ("activity[actNum[i]] = " + activity[actNum[i]]);
-        console.log ("-----------------------------------");
-    };
+    // debugPrint = function(ii) {
+    //     console.log ("i = " + i + ", ii = " + ii + ", dwarfNum[ii] = ", dwarfNum[ii]);
+    //     console.log ("randNum = ", randNum);
+    //     console.log ("dwarfName[dwarfNum[ii]] = ", dwarfName[dwarfNum[ii]]);
+    //     console.log ("dwarfNum.length = ", dwarfNum.length);
+    //     console.log ("dwarfsFound = ", dwarfsFound);
+    //     console.log ("found = ", found);
+    //     console.log ("Array dwarfName = " + dwarfName);
+    //     console.log ("Array dwarfNum = " + dwarfNum);
+    //     console.log ("Array activity = " + activity);
+    //     console.log ("activity[actNum[i]] = " + activity[actNum[i]]);
+    //     console.log ("-----------------------------------");
+    // };
 
 
 
@@ -28,7 +28,7 @@ var snowWhite = {
     name: "Snow White",
     dwarfName: ["Sleepy", "Sneezy", "Grumpy", "Happy", "Doc", "Bashful", "Dopey"],
     // dwarfCount : function() { return this.dwarfName.length; },
-    isSleeping: true,
+    // isSleeping: true,
     activity: ["walk", "run", "stroll", "swim", "RV trip", "water-slide adventure", "joy ride in a Humvee"],
 
     actCount: 7,
@@ -42,7 +42,21 @@ var snowWhite = {
     actsFound: 0, // Count of ints found for randomization of ACTIVITIES
     randNum : 0,  // Used for both randomizaions
 
-    
+    // Create object for Hangman game display output...
+     word2guess : {          // OBJECT
+        word : [],
+        show : [],
+        wrongLtrs : [],
+        guessesLeft : 0,
+        wonThisGame : false
+    },
+
+    playerStats : {
+        wins : 0,
+        losses : 0
+    },
+
+
 
     // FUNCTIONS
     // =====================================
@@ -64,6 +78,21 @@ var snowWhite = {
 
     // Initialize the Snow White Dwarf Enrichment Activities, used in hangDwarf too!
     initWords: function() {
+        this.randDwarfName = "";
+        this.i = 0;
+        this.ii = 0;
+        this.dwarfNum = [];
+        this.dwarfsFound = 0;
+        this.actNum = [];
+        this.actsFound = 0;
+        this.randNum;
+        this.word2guess = {          // OBJECT
+            word : [],
+            show : [],
+            wrongLtrs : [],
+            guessesLeft : 0,
+            wonThisGame : false
+        }
         // FOR RANDOMIZING the DWARFS...
         // Set up first random num outside while loop, then enter loop
         // Pick a random number, but only keep it if it is NOT one already selected.
@@ -108,7 +137,7 @@ var snowWhite = {
             // debug_print(actsFound);
         };
         this.selRandDwarf();
-        this.hypeDwarfs();
+        // this.hypeDwarfs();
         // this.printSched();
     },
 
@@ -185,20 +214,6 @@ var snowWhite = {
         return false;
     },
 
-    // Create object for Hangman game display output...
-     word2guess : {          // OBJECT
-        word : [],
-        show : [],
-        wrongLtrs : [],
-        guessesLeft : 0,
-        wonThisGame : false
-    },
-
-    playerStats : {
-        wins : 0,
-        losses : 0
-    },
-
     // Get random dwarf from the two random numbers arrays for dwarfs and activities above
     initHangmanOut : function () {
         this.word2guess.word = this.randDwarfName;
@@ -228,17 +243,18 @@ var snowWhite = {
         for (var j=0; j<this.word2guess.wrongLtrs.length; j++) {
             wrongGuessesHtml += this.word2guess.wrongLtrs[j] + ", ";
         }
-        document.getElementById("wrong-guesses").innerHTML = "wrong-guesses: " + wrongGuessesHtml;
-        document.getElementById("guesses-left").innerHTML = "guesses-left: " + this.word2guess.guessesLeft;
-        document.getElementById("win-counter").innerHTML = "win-counter: " + this.playerStats.wins;
-        document.getElementById("loss-counter").innerHTML = "loss-counter: " + this.playerStats.losses;
+        document.getElementById("wrong-guesses").innerHTML = "&nbsp " + wrongGuessesHtml;
+        document.getElementById("guesses-left").innerHTML = "&nbsp " + this.word2guess.guessesLeft;
+        document.getElementById("win-counter").innerHTML = "&nbsp " + this.playerStats.wins;
+        document.getElementById("loss-counter").innerHTML = "&nbsp " + this.playerStats.losses;
         if ( (this.word2guess.guessesLeft === 0 ) || this.word2guess.wonThisGame ) {
             if ( this.word2guess.wonThisGame ) {
-                document.getElementById("goodBye").innerHTML = "<strong><strong><h1>!!!  YOU WON  !!!</h1></strong></strong>"; 
+                document.getElementById("goodBye").innerHTML = "<h3>!!!  YOU WON  !!!</h3>"; 
             } else {
-                document.getElementById("goodBye").innerHTML = "<h1>Sorry, You Lost</h1>";
+                document.getElementById("goodBye").innerHTML = "<h3>Sorry, You Lost</h3>";
             }
-            document.getElementById("goodBye").innerHTML += "<strong><h1>Game Over!</h1></strong>";
+            document.getElementById("goodBye").innerHTML += "<h3>Game Over!</h3>" ; // + 
+            // <button onclick="snowWhite.playerClickedExit()">Click to Exit</button>;
         }
     },
       
@@ -248,20 +264,34 @@ var snowWhite = {
         var matchFound = false;
         for (var j=0; j < this.word2guess.word.length; j++) {
             console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
-            if (this.word2guess.word[j].toLowerCase() === letterPressed) { // CORRECT Guess
+            if (this.word2guess.word[j].toLowerCase() === letterPressed) {
+                // CORRECT Guess...
                 this.word2guess.show[j] = true;
                 matchFound = true;
                 console.log("letter_pressed = " + letterPressed + "; word2guess.word[j] = " + this.word2guess.word[j] );
                 console.log(this.word2guess.show[i] + " Show Letter");
+                this.word2guess.guessesLeft--;
             }
         };
-        // WRONG Guess
+        // WRONG Guess...
         if (!matchFound) {
-            this.word2guess.wrongLtrs.push(letterPressed);
+            // Test to see if wrong letter has been guessed before
+            var newWrongLetter = true;
+            for (var j=0; j<this.word2guess.wrongLtrs.length; j++) {
+                if (this.word2guess.wrongLtrs[j] === letterPressed) {
+                    // WRONG Letter, but PREVIOUSLY SEEN Guess
+                    newWrongLetter = false;
+                }
+            }
+    
+            // Now push since this is a new wrong letter
+            if ( newWrongLetter ) {
+                this.word2guess.wrongLtrs.push(letterPressed);
+                // Subtract 1 from guesses remaining, ONLY IF this is a NEW wrong letter
+                this.word2guess.guessesLeft--;
+            }
         };
 
-        // Subtract 1 from guesses remaining
-        this.word2guess.guessesLeft--;
 
         // Check if all letters have been guess correctly, 
         var testForAllTrue = true ;
@@ -310,19 +340,50 @@ var snowWhite = {
         document.getElementById("word-blanks").innerHTML =  html2show;
     },
 
-    // Hang Dwarf Script
+    // Check for exit case - BiG TBD
+    // playerClickedExit : false,
+    // playerClickedExit : function () {
+    //     document.getElementById("player-leaves").innerHTML =  "Player Clicked Exit! Good Bye.";
+    //     break;
+    // },
+
+     // Hang Dwarf Script - Main entry after initWords initializes the game
     hangDwarf : function () {
 
         // Initial Dispaly to start getting input
         this.initHangmanOut();
         this.dispHangmanOut();
 
+        // Print out starting stats
+        this.printStats();
+        // document.getElementById("wrong-guesses").innerHTML = "wrong-guesses: " + wrongGuessesHtml;
+        // document.getElementById("guesses-left").innerHTML = "guesses-left: " + this.word2guess.guessesLeft;
+        // document.getElementById("win-counter").innerHTML = "win-counter: " + this.playerStats.wins;
+        // document.getElementById("loss-counter").innerHTML = "loss-counter: " + this.playerStats.losses;
+
+        // Check for exit case - BiG TBD
+        // document.onclick = function (ev) {
+        //     document.getElementById("number").innerHTML = "Sorry you don't want to continue.";
+        //     return ;
+        //     playerClickedExit = true;
+        // }
+        // TBD
+        // if ( (this.word2guess.guessesLeft === 0 ) || this.word2guess.wonThisGame ) {
+        //     if ( this.word2guess.wonThisGame ) {
+        //         document.getElementById("goodBye").innerHTML = "<strong><strong><h1>!!!  YOU WON  !!!</h1></strong></strong>"; 
+        //     } else {
+        //         document.getElementById("goodBye").innerHTML = "<h1>Sorry, You Lost</h1>";
+        //     }
+        //     document.getElementById("goodBye").innerHTML += "<strong><h1>Game Over!</h1></strong>";
+        // }
+
+
+
         // Get User Input...
         document.onkeyup = function (event) {
 
             var actionLetter = event.key;
             actionLetter = actionLetter.toLowerCase();
-            // var validLetter = false;
             var validLetter = snowWhite.isAlpha(actionLetter);
             console.log ("validLetter = " + validLetter + "; actionLetter = " + actionLetter)
 
@@ -337,22 +398,23 @@ var snowWhite = {
         snowWhite.dispHangmanOut();
         snowWhite.printStats();
         };
+        return;
     }, // End of hangDwarf
 
 
     // Printing Test
 
-    myFunction : function () {
-        var city = 'New York ' + 5 +' City';
-        var htmlOut = " ";
-        var i;
-        for (i=0;i<city.length;i++) {
-            console.log(city[i] + "   is a    " + typeof(city[i]) + "  myNaN = " + Number.isNaN(city[i]));
-            htmlOut +=  " _ " + city[i];
-            document.getElementById("demo").innerHTML =  htmlOut;
-        };
-    }
-};
+    // myFunction : function () {
+    //     var city = 'New York ' + 5 +' City';
+    //     var htmlOut = " ";
+    //     var i;
+    //     for (i=0;i<city.length;i++) {
+    //         console.log(city[i] + "   is a    " + typeof(city[i]) + "  myNaN = " + Number.isNaN(city[i]));
+    //         htmlOut +=  " _ " + city[i];
+    //         document.getElementById("demo").innerHTML =  htmlOut;
+    //     };
+    // }
+}; // End of snowWhite
 
 
 
